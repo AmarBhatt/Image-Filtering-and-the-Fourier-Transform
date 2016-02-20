@@ -1,0 +1,141 @@
+%% 3. Sobel Edge Detection
+% A. Custom Edge Detection
+
+I = imread('IMAGES/livingroom.tif');
+image = im2double(I);
+
+%add salt&pepper noise
+simage = imnoise(image,'salt & pepper');
+%add gaussian noise
+gimage = imnoise(image,'gaussian',0,0.01);
+
+
+%sobel filters
+sx = [-1 0 1;-2 0 2; -1 0 1];
+sy = [1 2 1;0 0 0; -1 -2 -1];
+
+fimageH = filter2(sx,image);
+fimageV = filter2(sy,image);
+fimage = abs(fimageH) + abs(fimageV);
+fsimageH = filter2(sx,simage);
+fsimageV = filter2(sy,simage);
+fsimage = abs(fsimageH) + abs(fsimageV);
+fgimageH = filter2(sx,gimage);
+fgimageV = filter2(sy,gimage);
+fgimage = abs(fgimageH) + abs(fgimageV);
+
+figure;
+subplot(2,2,1);
+imshow(image,'InitialMagnification','fit');
+title( sprintf('Original Image'), 'fontsize',18);
+    set(gca, 'fontsize', 18, 'linewidth', 2);
+subplot(2,2,2);
+imshow(fimage,'InitialMagnification','fit');
+title( sprintf('Original Image with Edge Detection'), 'fontsize',18);
+    set(gca, 'fontsize', 18, 'linewidth', 2);
+subplot(2,2,3);
+imshow(abs(fimageH),'InitialMagnification','fit');
+title( sprintf('Original Image with Horizontal Edge Detection'), 'fontsize',18);
+    set(gca, 'fontsize', 18, 'linewidth', 2);
+subplot(2,2,4);
+imshow(abs(fimageV),'InitialMagnification','fit');
+title( sprintf('Original Image with Vertical Edge Detection'), 'fontsize',18);
+    set(gca, 'fontsize', 18, 'linewidth', 2);
+print(sprintf('RESULTS/part3a-image1'),'-dpng');
+
+figure;
+subplot(2,2,1);
+imshow(simage,'InitialMagnification','fit');
+title( sprintf('Salt & Pepper Image'), 'fontsize',18);
+    set(gca, 'fontsize', 18, 'linewidth', 2);
+subplot(2,2,2);
+imshow(fsimage,'InitialMagnification','fit');
+title( sprintf('Salt & Pepper Image with Edge Detection'), 'fontsize',18);
+    set(gca, 'fontsize', 18, 'linewidth', 2);
+subplot(2,2,3);
+imshow(abs(fsimageH),'InitialMagnification','fit');
+title( sprintf('Salt & Pepper Image with Horizontal Edge Detection'), 'fontsize',18);
+    set(gca, 'fontsize', 18, 'linewidth', 2);
+subplot(2,2,4);
+imshow(abs(fsimageV),'InitialMagnification','fit');
+title( sprintf('Salt & Pepper Image with Vertical Edge Detection'), 'fontsize',18);
+    set(gca, 'fontsize', 18, 'linewidth', 2);
+print(sprintf('RESULTS/part3a-image2'),'-dpng');
+
+figure;
+subplot(2,2,1);
+imshow(gimage,'InitialMagnification','fit');
+title( sprintf('Gaussian Image'), 'fontsize',18);
+    set(gca, 'fontsize', 18, 'linewidth', 2);
+subplot(2,2,2);
+imshow(fgimage,'InitialMagnification','fit');
+title( sprintf('Gaussian Image with Edge Detection'), 'fontsize',18);
+    set(gca, 'fontsize', 18, 'linewidth', 2);
+subplot(2,2,3);
+imshow(abs(fgimageH),'InitialMagnification','fit');
+title( sprintf('Gaussian Image with Horizontal Edge Detection'), 'fontsize',18);
+    set(gca, 'fontsize', 18, 'linewidth', 2);
+subplot(2,2,4);
+imshow(abs(fgimageV),'InitialMagnification','fit');
+title( sprintf('Gaussian Image with Vertical Edge Detection'), 'fontsize',18);
+    set(gca, 'fontsize', 18, 'linewidth', 2);
+print(sprintf('RESULTS/part3a-image3'),'-dpng');
+
+%% B. Built-in Edge Detection
+I = imread('IMAGES/livingroom.tif');
+image = im2double(I);
+
+%add salt&pepper noise
+simage = imnoise(image,'salt & pepper');
+%add gaussian noise
+gimage = imnoise(image,'gaussian',0,0.01);
+
+
+fimage = edge(image,'sobel');
+
+fsimage = edge(simage,'sobel');
+
+fgimage = edge(gimage,'sobel');
+
+figure;
+subplot(2,1,1);
+imshow(image,'InitialMagnification','fit');
+title( sprintf('Original Image'), 'fontsize',18);
+    set(gca, 'fontsize', 18, 'linewidth', 2);
+subplot(2,1,2);
+imshow(fimage,'InitialMagnification','fit');
+title( sprintf('Original Image with Built-in Edge Detection'), 'fontsize',18);
+    set(gca, 'fontsize', 18, 'linewidth', 2);
+print(sprintf('RESULTS/part3b-image1'),'-dpng');
+
+figure;
+subplot(2,2,1);
+imshow(simage,'InitialMagnification','fit');
+title( sprintf('Salt & Pepper Image'), 'fontsize',18);
+    set(gca, 'fontsize', 18, 'linewidth', 2);
+subplot(2,2,2);
+imshow(fsimage,'InitialMagnification','fit');
+title( sprintf('Salt & Pepper Image with Edge Detection'), 'fontsize',18);
+    set(gca, 'fontsize', 18, 'linewidth', 2);
+
+print(sprintf('RESULTS/part3a-image2'),'-dpng');
+
+figure;
+subplot(2,2,1);
+imshow(gimage,'InitialMagnification','fit');
+title( sprintf('Gaussian Image'), 'fontsize',18);
+    set(gca, 'fontsize', 18, 'linewidth', 2);
+subplot(2,2,2);
+imshow(fgimage,'InitialMagnification','fit');
+title( sprintf('Gaussian Image with Edge Detection'), 'fontsize',18);
+    set(gca, 'fontsize', 18, 'linewidth', 2);
+subplot(2,2,3);
+imshow(abs(fgimageH),'InitialMagnification','fit');
+title( sprintf('Gaussian Image with Horizontal Edge Detection'), 'fontsize',18);
+    set(gca, 'fontsize', 18, 'linewidth', 2);
+subplot(2,2,4);
+imshow(abs(fgimageV),'InitialMagnification','fit');
+title( sprintf('Gaussian Image with Vertical Edge Detection'), 'fontsize',18);
+    set(gca, 'fontsize', 18, 'linewidth', 2);
+print(sprintf('RESULTS/part3a-image3'),'-dpng');
+
