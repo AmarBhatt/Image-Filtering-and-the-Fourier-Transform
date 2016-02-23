@@ -14,14 +14,14 @@ gimage = imnoise(image,'gaussian',0,0.01);
 sx = [-1 0 1;-2 0 2; -1 0 1];
 sy = [1 2 1;0 0 0; -1 -2 -1];
 
-fimageH = filter2(sx,image);
-fimageV = filter2(sy,image);
+fimageV = filter2(sx,image);
+fimageH = filter2(sy,image);
 fimage = abs(fimageH) + abs(fimageV);
-fsimageH = filter2(sx,simage);
-fsimageV = filter2(sy,simage);
+fsimageV = filter2(sx,simage);
+fsimageH = filter2(sy,simage);
 fsimage = abs(fsimageH) + abs(fsimageV);
-fgimageH = filter2(sx,gimage);
-fgimageV = filter2(sy,gimage);
+fgimageV = filter2(sx,gimage);
+fgimageH = filter2(sy,gimage);
 fgimage = abs(fgimageH) + abs(fgimageV);
 
 figure;
@@ -181,14 +181,14 @@ filtgimage = medfilt2(filtgimage,[5,5]);
 sx = [-1 0 1;-2 0 2; -1 0 1];
 sy = [1 2 1;0 0 0; -1 -2 -1];
 
-fimageH = filter2(sx,image);
-fimageV = filter2(sy,image);
+fimageV = filter2(sx,image);
+fimageH = filter2(sy,image);
 fimage = abs(fimageH) + abs(fimageV);
-fsimageH = filter2(sx,filtsimage);
-fsimageV = filter2(sy,filtsimage);
+fsimageV = filter2(sx,filtsimage);
+fsimageH = filter2(sy,filtsimage);
 fsimage = abs(fsimageH) + abs(fsimageV);
-fgimageH = filter2(sx,filtgimage);
-fgimageV = filter2(sy,filtgimage);
+fgimageV = filter2(sx,filtgimage);
+fgimageH = filter2(sy,filtgimage);
 fgimage = abs(fgimageH) + abs(fgimageV);
 
 figure;

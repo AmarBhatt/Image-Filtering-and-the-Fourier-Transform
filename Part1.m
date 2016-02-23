@@ -23,7 +23,7 @@ title( sprintf('Gaussian Filtered Image (1 time)'), 'fontsize',18);
 %truesize
 print('RESULTS/part1a-image1','-dpng');
 figure;
-freqz2(H);
+freqz2(H,[10 10]);
 title( sprintf('Low Pass Frequency Response'), 'fontsize',18);
     set(gca, 'fontsize', 18, 'linewidth', 2);
 print('RESULTS/part1a-freqresp','-dpng');
@@ -127,7 +127,7 @@ HP = flipud(HP);
 HP = fliplr(HP);
 
 figure;
-freqz2(HP);
+freqz2(HP,[10 10]);
 
 figure;
 subplot(2,1,1);

@@ -3,33 +3,42 @@
 I = imread('IMAGES/livingroom.tif');
 image = im2double(I);
 
+variance = var(image(:));
+
 %add salt&pepper noise
-simage = imnoise(image,'salt & pepper');
+simage = imnoise(image,'salt & pepper',0.25);
 %add gaussian noise
-gimage = imnoise(image,'gaussian',0,0.01);
+gvar = 0.15;
+gimage = imnoise(image,'gaussian',0,gvar);
 
 ssig = mean(simage(:));
 snoise = std(simage(:));
-srat = 10*log10(ssig/snoise);
+image_difference = image - simage;
+svar = var(image_difference(:));
+%srat = 10*log10(ssig/snoise);
+srat = 10*log10(variance/svar);
 
 gsig = mean(gimage(:));
 gnoise = std(gimage(:));
-grat = 10*log10(gsig/gnoise);
+%grat = 10*log10(gsig/gnoise);
+grat = 10*log10(variance/gvar);
 
-rattest = 10*log10(mean(image(:))/std(image(:)));
+%rattest = 10*log10(mean(image(:))/std(image(:)));
 
 figure;
-subplot(3,1,1);
+subplot(1,3,1);
 imshow(image,'InitialMagnification','fit');
-title( sprintf('Original Image, SNR = %f',rattest), 'fontsize',18);
+title( sprintf('Original Image'), 'fontsize',18);
     set(gca, 'fontsize', 18, 'linewidth', 2);
-subplot(3,1,2);
+subplot(1,3,2);
 imshow(simage,'InitialMagnification','fit');
-title( sprintf('Salt & Pepper Noisy Image, SNR = %f',srat), 'fontsize',18);
+xlabel(sprintf('SNR = %.3f',srat));
+title( sprintf('Salt & Pepper Noisy Image'), 'fontsize',18);
     set(gca, 'fontsize', 18, 'linewidth', 2);
-subplot(3,1,3);
+subplot(1,3,3);
 imshow(gimage,'InitialMagnification','fit');
-title( sprintf('Gaussian Noisy Image, SNR = %f',grat), 'fontsize',18);
+xlabel(sprintf('SNR = %.3f',grat));
+title( sprintf('Gaussian Noisy Image'), 'fontsize',18);
     set(gca, 'fontsize', 18, 'linewidth', 2);
 print(sprintf('RESULTS/part2a-image'),'-dpng');
 
@@ -38,30 +47,71 @@ N = 5;
 sigma = 0.5;
 
 HLP = fspecial('gaussian',N,sigma);
-fsimage = filter2(HLP,simage);
-fsimage = medfilt2(fsimage,[5,5]);
-fgimage = filter2(HLP,gimage);
-fgimage = medfilt2(fgimage,[5,5]);
-ssig = mean(fsimage(:));
-snoise = std(fsimage(:));
-gsig = mean(fgimage(:));
-gnoise = std(fgimage(:));
+flsimage = filter2(HLP,simage);
+fmsimage = medfilt2(simage,[5,5]);
+flgimage = filter2(HLP,gimage);
+fmgimage = medfilt2(gimage,[5,5]);
+fbsimage = medfilt2(flsimage,[5,5]);
+fbgimage = medfilt2(flgimage,[5,5]);
+% % ssig = mean(fsimage(:));
+% % snoise = std(fsimage(:));
+% % gsig = mean(fgimage(:));
+% % gnoise = std(fgimage(:));
+% 
+% image_difference = image - flsimage;
+% slvar = var(image_difference(:));
+% slrat = 10*log10(variance/slvar);
+% glrat = 10*log10(variance/gvar);
+% 
+% image_difference = image - fmsimage;
+% smvar = var(image_difference(:));
+% smrat = 10*log10(variance/smvar);
+% gmrat = 10*log10(variance/gvar);
+% 
+% image_difference = image - fbsimage;
+% sbvar = var(image_difference(:));
+% sbrat = 10*log10(variance/sbvar);
+% gbrat = 10*log10(variance/gvar);
 
-sratfilt = 10*log10(ssig/snoise);
-gratfilt = 10*log10(gsig/gnoise);
-rattest = 10*log10(mean(image(:))/std(image(:)));
+
+% sratfilt = 10*log10(ssig/snoise);
+% gratfilt = 10*log10(gsig/gnoise);
+% rattest = 10*log10(mean(image(:))/std(image(:)));
 
 figure;
-subplot(3,1,1);
+subplot(2,2,1);
 imshow(image,'InitialMagnification','fit');
-title( sprintf('Original Image, SNR = %f',rattest), 'fontsize',18);
+title( sprintf('Original Image'), 'fontsize',18);
     set(gca, 'fontsize', 18, 'linewidth', 2);
-subplot(3,1,2);
-imshow(fsimage,'InitialMagnification','fit');
-title( sprintf('Filtered Salt & Pepper Noisy Image, SNR = %f',sratfilt), 'fontsize',18);
+subplot(2,2,2);
+imshow(flsimage,'InitialMagnification','fit');
+title( sprintf('Low Pass Filtered Salt & Pepper Noisy Image'), 'fontsize',18);
     set(gca, 'fontsize', 18, 'linewidth', 2);
-subplot(3,1,3);
-imshow(fgimage,'InitialMagnification','fit');
-title( sprintf('Filtered Gaussian Noisy Image, SNR = %f',gratfilt), 'fontsize',18);
+subplot(2,2,3);
+imshow(fmsimage,'InitialMagnification','fit');
+title( sprintf('Median Filtered Salt & Pepper Noisy Image'), 'fontsize',18);
     set(gca, 'fontsize', 18, 'linewidth', 2);
-print(sprintf('RESULTS/part2b-image'),'-dpng');
+subplot(2,2,4);
+imshow(fbsimage,'InitialMagnification','fit');
+title( sprintf('Low Pass/Median Filtered Salt & Pepper Noisy Image'), 'fontsize',18);
+    set(gca, 'fontsize', 18, 'linewidth', 2);
+print(sprintf('RESULTS/part2b-image1'),'-dpng');
+
+figure;
+subplot(2,2,1);
+imshow(image,'InitialMagnification','fit');
+title( sprintf('Original Image'), 'fontsize',18);
+    set(gca, 'fontsize', 18, 'linewidth', 2);
+subplot(2,2,2);
+imshow(flgimage,'InitialMagnification','fit');
+title( sprintf('Low Pass Filtered Gaussian Noisy Image'), 'fontsize',18);
+    set(gca, 'fontsize', 18, 'linewidth', 2);
+subplot(2,2,3);
+imshow(fmgimage,'InitialMagnification','fit');
+title( sprintf('Median Filtered Gaussian Noisy Image'), 'fontsize',18);
+    set(gca, 'fontsize', 18, 'linewidth', 2);
+subplot(2,2,4);
+imshow(fbgimage,'InitialMagnification','fit');
+title( sprintf('Low Pass/Median Filtered Gaussian Noisy Image'), 'fontsize',18);
+    set(gca, 'fontsize', 18, 'linewidth', 2);
+print(sprintf('RESULTS/part2b-image2'),'-dpng');
